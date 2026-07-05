@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./App.css";
 
 function App() {
@@ -17,13 +17,13 @@ function App() {
       );
 
       if (!response.ok) {
-        throw new Error("Failed");
+        throw new Error();
       }
 
       const data = await response.json();
       setJoke(data);
-    } catch (err) {
-      setError("Error fetching joke!");
+    } catch {
+      setError("Could not fetch a joke. Try again.");
     } finally {
       setLoading(false);
     }
@@ -31,21 +31,23 @@ function App() {
 
   return (
     <div className="container">
-      <h1>Random Joke Generator</h1>
+      <h1>Random Joke</h1>
+
+      <p>Click the button to fetch a fresh one.</p>
 
       <button onClick={fetchJoke} disabled={loading}>
-        {loading ? "Fetching..." : "Fetch Joke"}
+        {loading
+          ? "Fetching..."
+          : error
+          ? "Try again"
+          : "Fetch joke"}
       </button>
 
-      {error && (
-        <p className="error">
-          {error}
-        </p>
-      )}
+      {error && <p className="error">{error}</p>}
 
       {joke && (
         <div className="joke">
-          <h3>{joke.setup}</h3>
+          <h2>{joke.setup}</h2>
           <p>{joke.punchline}</p>
         </div>
       )}
